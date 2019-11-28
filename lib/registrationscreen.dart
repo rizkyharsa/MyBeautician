@@ -8,14 +8,16 @@ import 'package:image_picker/image_picker.dart';
 import 'package:toast/toast.dart';
 import 'package:http/http.dart' as http;
 import 'package:progress_dialog/progress_dialog.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 String pathAsset = 'assets/images/profile1.jpg';
-String urlUpload = "http://githubbers.com/haris/mobile_programming/project/php/register_user.php";
+String urlUpload = "http://michannael.com/mybeautician/php/register_user.php";
 File _image;
 final TextEditingController _namecontroller = TextEditingController();
 final TextEditingController _emcontroller = TextEditingController();
 final TextEditingController _passcontroller = TextEditingController();
 final TextEditingController _phcontroller = TextEditingController();
+//final TextEditingController _radiuscontroller = TextEditingController();
 String _name, _email, _password, _phone;
 
 class RegisterScreen extends StatefulWidget {
@@ -172,6 +174,11 @@ class RegisterWidgetState extends State<RegisterWidget> {
                 hintText: "Phone",
               )),
         ),
+        /*TextField(
+            controller: _radiuscontroller,
+            keyboardType: TextInputType.number,
+            decoration: InputDecoration(
+                labelText: 'Radius', icon: Icon(Icons.blur_circular))),*/
         SizedBox(
           height: 15,
         ),
@@ -241,11 +248,13 @@ class RegisterWidgetState extends State<RegisterWidget> {
     _email = _emcontroller.text;
     _password = _passcontroller.text;
     _phone = _phcontroller.text;
+    //_radius = _radiuscontroller.text;
 
     if ((_isEmailValid(_email)) &&
         (_password.length > 5) &&
         (_image != null) &&
-        (_phone.length > 5)) {
+        (_phone.length > 5) //&&
+        /*(int.parse(_radius) < 30)*/){
       ProgressDialog pr = new ProgressDialog(context,
           type: ProgressDialogType.Normal, isDismissible: false);
       pr.style(message: "Registration in progress");
@@ -253,13 +262,15 @@ class RegisterWidgetState extends State<RegisterWidget> {
 
       String base64Image = base64Encode(_image.readAsBytesSync());
       http.post(urlUpload, body: {
+        "encoded_string": base64Image,
         "name": _name,
         "email": _email,
         "password": _password,
-        "phone": _phone,
-        "encoded_string": base64Image,
+        "phone": _phone, 
+        //"radius": _radius,
       }).then((res) {
         print(res.statusCode);
+        if (res.body == "success") {
         Toast.show(res.body, context,
             duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
         _image = null;
@@ -271,6 +282,7 @@ class RegisterWidgetState extends State<RegisterWidget> {
         pr.dismiss();
         Navigator.pushReplacement(context,
             MaterialPageRoute(builder: (BuildContext context) => LoginPage()));
+        }
       }).catchError((err) {
         print(err);
       });
@@ -282,5 +294,17 @@ class RegisterWidgetState extends State<RegisterWidget> {
 
   bool _isEmailValid(String email) {
     return RegExp(r"^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(email);
+  }
+
+  void savepref(String email, String pass) async {
+    print('Inside savepref');
+    _email = _emcontroller.text;
+    _password = _passcontroller.text;
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    //true save pref
+    await prefs.setString('email', email);
+    await prefs.setString('pass', pass);
+    print('Save pref $_email');
+    print('Save pref $_password');
   }
 }
