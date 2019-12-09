@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
-//import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:my_beautician/user.dart';
 import 'package:toast/toast.dart';
 import 'package:progress_dialog/progress_dialog.dart';
@@ -23,14 +23,14 @@ class _JobDetailState extends State<JobDetail> {
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(
-        SystemUiOverlayStyle(statusBarColor: Colors.purple[300]));
+        SystemUiOverlayStyle(statusBarColor: Colors.purple[400]));
     return WillPopScope(
       onWillPop: _onBackPressAppBar,
       child: Scaffold(
           resizeToAvoidBottomPadding: false,
           appBar: AppBar(
             title: Text('JOB DETAILS'),
-            backgroundColor: Colors.purple[300],
+            backgroundColor: Colors.purple[400],
           ),
           body: SingleChildScrollView(
             child: Container(
@@ -66,18 +66,18 @@ class DetailInterface extends StatefulWidget {
 }
 
 class _DetailInterfaceState extends State<DetailInterface> {
-  //Completer<GoogleMapController> _controller = Completer();
-  //CameraPosition _myLocation;
+  Completer<GoogleMapController> _controller = Completer();
+  CameraPosition _myLocation;
 
   @override
   void initState() {
     super.initState();
-    /*_myLocation = CameraPosition(
+    _myLocation = CameraPosition(
       target: LatLng(
           double.parse(widget.job.joblat), double.parse(widget.job.joblon)),
       zoom: 17,
     );
-    print(_myLocation.toString());*/
+    print(_myLocation.toString());
   }
 
   @override
@@ -120,11 +120,11 @@ class _DetailInterfaceState extends State<DetailInterface> {
                       style: TextStyle(fontWeight: FontWeight.bold)),
                   Text("RM" + widget.job.jobprice),
                 ]),
-                /*TableRow(children: [
+                TableRow(children: [
                   Text("Job Location",
                       style: TextStyle(fontWeight: FontWeight.bold)),
                   Text("")
-                ]),*/
+                ]),
               ]),
               SizedBox(
                 height: 10,
@@ -132,7 +132,7 @@ class _DetailInterfaceState extends State<DetailInterface> {
               Container(
                 height: 120,
                 width: 340,
-                /*child: GoogleMap(
+                child: GoogleMap(
                   // 2
                   initialCameraPosition: _myLocation,
                   // 3
@@ -142,7 +142,7 @@ class _DetailInterfaceState extends State<DetailInterface> {
                   onMapCreated: (GoogleMapController controller) {
                     _controller.complete(controller);
                   },
-                ),*/
+                ),
               ),
               Container(
                 width: 350,
@@ -154,7 +154,7 @@ class _DetailInterfaceState extends State<DetailInterface> {
                     'ACCEPT JOB',
                     style: TextStyle(fontSize: 16),
                   ),
-                  color: Colors.purple[300],
+                  color: Colors.purple[400],
                   textColor: Colors.white,
                   elevation: 5,
                   onPressed: _onAcceptJob,
@@ -169,7 +169,7 @@ class _DetailInterfaceState extends State<DetailInterface> {
   }
 
   void _onAcceptJob() {
-    if (widget.user.email=="user@noregister"){
+     if (widget.user.email=="user@noregister"){
       Toast.show("Please register to view accept jobs", context,
           duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
       return;
@@ -193,7 +193,7 @@ class _DetailInterfaceState extends State<DetailInterface> {
         // return object of type Dialog
         return AlertDialog(
           title: new Text("Accept " + widget.job.jobtitle),
-          content: new Text("Are you sure?"),
+          content: new Text("Are your sure?"),
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
             new FlatButton(
@@ -259,8 +259,9 @@ class _DetailInterfaceState extends State<DetailInterface> {
             name: dres[1],
             email: dres[2],
             phone: dres[3],
-            credit: dres[4]
-            );
+            radius: dres[4],
+            credit: dres[5],
+            rating: dres[6]);
         Navigator.push(ctx,
             MaterialPageRoute(builder: (context) => MainScreen(user: user)));
       }

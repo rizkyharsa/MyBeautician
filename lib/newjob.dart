@@ -204,6 +204,7 @@ class _CreateNewJobState extends State<CreateNewJob> {
       "latitude": _currentPosition.latitude.toString(),
       "longitude": _currentPosition.longitude.toString(),
       "credit": widget.user.credit,
+      "rating": widget.user.rating
     }).then((res) {
       print(urlUpload);
       Toast.show(res.body, context,
@@ -272,8 +273,8 @@ class _CreateNewJobState extends State<CreateNewJob> {
           email: dres[2],
           phone: dres[3],
           radius: dres[4],
-          credit: dres[5]
-        );
+          credit: dres[5],
+          rating: dres[6]);
         Navigator.push(ctx,
             MaterialPageRoute(builder: (context) => MainScreen(user: user)));
       }

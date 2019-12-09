@@ -8,7 +8,8 @@ class Job {
       jobimage,
       jobworker,
       joblat,
-      joblon;
+      joblon,
+      jobrating;
 
   Job(
       {this.jobid,
@@ -20,5 +21,6 @@ class Job {
       this.jobimage,
       this.jobworker,
       this.joblat,
-      this.joblon});
+      this.joblon,
+      this.jobrating});
 }

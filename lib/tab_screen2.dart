@@ -1,14 +1,14 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:flutter/services.dart';
-import 'package:toast/toast.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:progress_dialog/progress_dialog.dart';
+import 'dart:convert';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:my_beautician/newjob.dart';
-import 'package:my_beautician/user.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:flutter/services.dart';
 import 'package:my_beautician/registrationscreen.dart';
-
+import 'package:my_beautician/user.dart';
+import 'package:toast/toast.dart';
+import 'package:progress_dialog/progress_dialog.dart';
 double perpage = 1;
 
 class TabScreen2 extends StatefulWidget {
@@ -22,6 +22,7 @@ class TabScreen2 extends StatefulWidget {
 
 class _TabScreen2State extends State<TabScreen2> {
   GlobalKey<RefreshIndicatorState> refreshKey;
+
   final Geolocator geolocator = Geolocator()..forceAndroidLocationManager;
   Position _currentPosition;
   String _currentAddress = "Searching current location...";
@@ -38,21 +39,21 @@ class _TabScreen2State extends State<TabScreen2> {
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(
-        SystemUiOverlayStyle(statusBarColor: Colors.purple[300]));
+        SystemUiOverlayStyle(statusBarColor: Colors.purple[400]));
     return MaterialApp(
         debugShowCheckedModeBanner: false,
         home: Scaffold(
             resizeToAvoidBottomPadding: false,
             floatingActionButton: FloatingActionButton(
               child: Icon(Icons.add),
-              backgroundColor: Colors.purple[300],
+              backgroundColor: Colors.purple[400],
               elevation: 2.0,
               onPressed: requestNewJob,
               tooltip: 'Request new help',
             ),
             body: RefreshIndicator(
               key: refreshKey,
-              color: Colors.purple[300],
+              color: Colors.purple[400],
               onRefresh: () async {
                 await refreshList();
               },
@@ -94,9 +95,8 @@ class _TabScreen2State extends State<TabScreen2> {
                                           children: <Widget>[
                                             Row(
                                               children: <Widget>[
-                                                Icon(
-                                                  Icons.person,
-                                                ),
+                                                Icon(Icons.person,
+                                                    ),
                                                 SizedBox(
                                                   width: 5,
                                                 ),
@@ -114,9 +114,8 @@ class _TabScreen2State extends State<TabScreen2> {
                                             ),
                                             Row(
                                               children: <Widget>[
-                                                Icon(
-                                                  Icons.location_on,
-                                                ),
+                                                Icon(Icons.location_on,
+                                                    ),
                                                 SizedBox(
                                                   width: 5,
                                                 ),
@@ -127,31 +126,30 @@ class _TabScreen2State extends State<TabScreen2> {
                                             ),
                                             Row(
                                               children: <Widget>[
-                                                Icon(
-                                                  Icons.rounded_corner,
-                                                ),
+                                                Icon(Icons.rounded_corner,
+                                                    ),
                                                 SizedBox(
                                                   width: 5,
                                                 ),
                                                 Flexible(
                                                   child: Text(
                                                       "Job Radius within " +
-                                                      widget.user.radius +
+                                                          widget.user.radius +
                                                           " KM"),
                                                 ),
                                               ],
                                             ),
                                             Row(
                                               children: <Widget>[
-                                                Icon(
-                                                  Icons.credit_card,
-                                                ),
+                                                Icon(Icons.credit_card,
+                                                    ),
                                                 SizedBox(
                                                   width: 5,
                                                 ),
                                                 Flexible(
-                                                  child: Text(
-                                                      "You have " + widget.user.credit + " Credit"),
+                                                  child: Text("You have " +
+                                                      widget.user.credit +
+                                                      " Credit"),
                                                 ),
                                               ],
                                             ),
@@ -167,9 +165,9 @@ class _TabScreen2State extends State<TabScreen2> {
                               height: 4,
                             ),
                             Container(
-                              color: Colors.purple[300],
+                              color: Colors.purple[400],
                               child: Center(
-                                child: Text("Your Request Jobs ",
+                                child: Text("Your Posted Jobs ",
                                     style: TextStyle(
                                         fontSize: 16,
                                         fontWeight: FontWeight.bold,
@@ -200,23 +198,23 @@ class _TabScreen2State extends State<TabScreen2> {
                         elevation: 2,
                         child: InkWell(
                           onLongPress: () => _onJobDelete(
-                            data[index]['jobid'].toString(),
-                            data[index]['jobtitle'].toString()
-                          ),
+                              data[index]['jobid'].toString(),
+                              data[index]['jobtitle'].toString()),
                           child: Padding(
                             padding: const EdgeInsets.all(2.0),
                             child: Row(
                               children: <Widget>[
-                                Container(
-                                    height: 100,
-                                    width: 100,
-                                    decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        border: Border.all(color: Colors.white),
-                                        image: DecorationImage(
-                                            fit: BoxFit.fill,
-                                            image: NetworkImage(
-                                                "http://michannael.com/mybeautician/images/${data[index]['jobimage']}.jpg")))),
+                                 Container(
+                                  height: 100,
+                                  width: 100,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                      border: Border.all(color: Colors.white),
+                                      image: DecorationImage(
+                                    fit: BoxFit.fill,
+                                    image: NetworkImage(
+                                    "http://michannael.com/mybeautician/images/${data[index]['jobimage']}.jpg"
+                                  )))),
                                 Expanded(
                                   child: Container(
                                     child: Column(
@@ -228,10 +226,23 @@ class _TabScreen2State extends State<TabScreen2> {
                                             style: TextStyle(
                                                 fontSize: 16,
                                                 fontWeight: FontWeight.bold)),
+                                        RatingBar(
+                                          itemCount: 5,
+                                          itemSize: 12,
+                                          initialRating: double.parse(
+                                              data[index]['jobrating']
+                                                  .toString()),
+                                          itemPadding: EdgeInsets.symmetric(
+                                              horizontal: 2.0),
+                                          itemBuilder: (context, _) => Icon(
+                                            Icons.star,
+                                            color: Colors.amber,
+                                          ), onRatingUpdate: (double value) {},
+                                        ),
                                         SizedBox(
                                           height: 5,
                                         ),
-                                        Text("RM "+ data[index]['jobprice']),
+                                        Text("RM " + data[index]['jobprice']),
                                         SizedBox(
                                           height: 5,
                                         ),
@@ -285,7 +296,7 @@ class _TabScreen2State extends State<TabScreen2> {
     String urlLoadJobs = "http://michannael.com/mybeautician/php/load_job_user.php";
      ProgressDialog pr = new ProgressDialog(context,
         type: ProgressDialogType.Normal, isDismissible: false);
-        pr.style(message: "Loading Jobs");
+        pr.style(message: "Loading All Posted Jobs");
     pr.show();
     http.post(urlLoadJobs, body: {
       "email": widget.user.email ?? "notavail",
@@ -322,10 +333,28 @@ class _TabScreen2State extends State<TabScreen2> {
     return null;
   }
 
+  void requestNewJob() {
+    print(widget.user.email);
+    if (widget.user.email != "user@noregister") {
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (BuildContext context) => NewJob(
+                    user: widget.user,
+                  )));
+    } else {
+      Toast.show("Please Register First to request new job", context,
+          duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (BuildContext context) => RegisterScreen()));
+    }
+  }
+
   void _onJobDelete(String jobid, String jobname) {
     print("Delete " + jobid);
     _showDialog(jobid, jobname);
-    print("Delete ");
   }
 
   void _showDialog(String jobid, String jobname) {
@@ -371,6 +400,7 @@ class _TabScreen2State extends State<TabScreen2> {
       if (res.body == "success") {
         Toast.show("Success", context,
             duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
+        init();
       } else {
         Toast.show("Failed", context,
             duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
@@ -381,27 +411,7 @@ class _TabScreen2State extends State<TabScreen2> {
     });
     return null;
   }
-
-  void requestNewJob() {
-    print(widget.user.email);
-    if (widget.user.email != "user@noregister") {
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (BuildContext context) => NewJob(
-                    user: widget.user,
-                  )));
-    } else {
-      Toast.show("Please Register First to request new job", context,
-          duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (BuildContext context) => RegisterScreen()));
-    }
-  }
 }
-
 class SlideMenu extends StatefulWidget {
   final Widget child;
   final List<Widget> menuItems;
@@ -412,15 +422,13 @@ class SlideMenu extends StatefulWidget {
   _SlideMenuState createState() => new _SlideMenuState();
 }
 
-class _SlideMenuState extends State<SlideMenu>
-    with SingleTickerProviderStateMixin {
+class _SlideMenuState extends State<SlideMenu> with SingleTickerProviderStateMixin {
   AnimationController _controller;
 
   @override
   initState() {
     super.initState();
-    _controller = new AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 200));
+    _controller = new AnimationController(vsync: this, duration: const Duration(milliseconds: 200));
   }
 
   @override
@@ -432,8 +440,9 @@ class _SlideMenuState extends State<SlideMenu>
   @override
   Widget build(BuildContext context) {
     final animation = new Tween(
-            begin: const Offset(0.0, 0.0), end: const Offset(-0.2, 0.0))
-        .animate(new CurveTween(curve: Curves.decelerate).animate(_controller));
+      begin: const Offset(0.0, 0.0),
+      end: const Offset(-0.2, 0.0)
+    ).animate(new CurveTween(curve: Curves.decelerate).animate(_controller));
 
     return new GestureDetector(
       onHorizontalDragUpdate: (data) {
@@ -444,11 +453,8 @@ class _SlideMenuState extends State<SlideMenu>
       },
       onHorizontalDragEnd: (data) {
         if (data.primaryVelocity > 2500)
-          _controller
-              .animateTo(.0); //close menu on fast swipe in the right direction
-        else if (_controller.value >= .5 ||
-            data.primaryVelocity <
-                -2500) // fully open if dragged a lot to left or on fast swipe to left
+          _controller.animateTo(.0); //close menu on fast swipe in the right direction
+        else if (_controller.value >= .5 || data.primaryVelocity < -2500) // fully open if dragged a lot to left or on fast swipe to left
           _controller.animateTo(1.0);
         else // close if none of above
           _controller.animateTo(.0);

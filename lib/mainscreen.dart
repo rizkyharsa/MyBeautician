@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:my_beautician/tab_screen.dart';
+import 'tab_screen.dart';
 import 'package:my_beautician/tab_screen2.dart';
 import 'package:my_beautician/tab_screen3.dart';
 import 'package:my_beautician/tab_screen4.dart';

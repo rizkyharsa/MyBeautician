@@ -3,9 +3,9 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-//import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:flutter/services.dart';
+import 'package:my_beautician/payment.dart';
 import 'package:my_beautician/loginscreen.dart';
 import 'package:my_beautician/registrationscreen.dart';
 import 'package:my_beautician/splashscreen.dart';
@@ -13,8 +13,9 @@ import 'package:my_beautician/user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:toast/toast.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
+import 'package:random_string/random_string.dart';
 
-//import 'mainscreen.dart';
 
 String urlgetuser = "http://michannael.com/mybeautician/php/get_user.php";
 String urluploadImage =
@@ -22,6 +23,7 @@ String urluploadImage =
 String urlupdate = "http://michannael.com/mybeautician/php/update_profile.php";
 File _image;
 int number = 0;
+String _value;
 
 class TabScreen4 extends StatefulWidget {
   //final String email;
@@ -82,8 +84,8 @@ class _TabScreen4State extends State<TabScreen4> {
                               GestureDetector(
                                 onTap: _takePicture,
                                 child: Container(
-                                    width: 150.0,
-                                    height: 150.0,
+                                    width: 120.0,
+                                    height: 120.0,
                                     decoration: new BoxDecoration(
                                         shape: BoxShape.circle,
                                         border: Border.all(color: Colors.white),
@@ -102,7 +104,6 @@ class _TabScreen4State extends State<TabScreen4> {
                                       fontSize: 16),
                                 ),
                               ),
-                              
                               Container(
                                 child: Text(
                                   widget.user.email,
@@ -111,7 +112,6 @@ class _TabScreen4State extends State<TabScreen4> {
                                       fontSize: 14),
                                 ),
                               ),
-                              
                               Column(
                                 children: <Widget>[
                                   Row(
@@ -126,7 +126,7 @@ class _TabScreen4State extends State<TabScreen4> {
                                   ),
                                 ],
                               ),
-                              /*Row(
+                              Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: <Widget>[
                                   Icon(
@@ -135,20 +135,9 @@ class _TabScreen4State extends State<TabScreen4> {
                                   SizedBox(
                                     width: 5,
                                   ),
-                                  /*RatingBar(
-                                    itemCount: 5,
-                                    itemSize: 12,
-                                    initialRating: double.parse(
-                                        widget.user.rating.toString() ?? 0.0),
-                                    itemPadding:
-                                        EdgeInsets.symmetric(horizontal: 2.0),
-                                    itemBuilder: (context, _) => Icon(
-                                      Icons.star,
-                                      color: Colors.amber,
-                                    ),
-                                  ),*/
+                                  
                                 ],
-                              ),*/
+                              ),
                               Column(
                                 children: <Widget>[
                                   Row(
@@ -163,7 +152,6 @@ class _TabScreen4State extends State<TabScreen4> {
                                   ),
                                 ],
                               ),
-                              
                               Column(
                                 children: <Widget>[
                                   Row(
@@ -196,7 +184,7 @@ class _TabScreen4State extends State<TabScreen4> {
                                       width: 5,
                                     ),
                                     Flexible(
-                                      child: Text( _currentAddress),
+                                      child: Text(_currentAddress),
                                     ),
                                   ],
                                 ),
@@ -247,7 +235,7 @@ class _TabScreen4State extends State<TabScreen4> {
                           child: Text("CHANGE RADIUS"),
                         ),
                         MaterialButton(
-                          onPressed: _buycredit,
+                          onPressed: _loadPayment,
                           child: Text("BUY CREDIT"),
                         ),
                         MaterialButton(
@@ -322,95 +310,95 @@ class _TabScreen4State extends State<TabScreen4> {
   }
 
   _getCurrentLocation() async {
-                              geolocator
-                                  .getCurrentPosition(desiredAccuracy: LocationAccuracy.best)
-                                  .then((Position position) {
-                                setState(() {
-                                  _currentPosition = position;
-                                  print(_currentPosition);
-                                });
-                                _getAddressFromLatLng();
-                              }).catchError((e) {
-                                print(e);
-                              });
-                            }
+    geolocator
+        .getCurrentPosition(desiredAccuracy: LocationAccuracy.best)
+        .then((Position position) {
+      setState(() {
+        _currentPosition = position;
+        print(_currentPosition);
+      });
+      _getAddressFromLatLng();
+    }).catchError((e) {
+      print(e);
+    });
+  }
 
   _getAddressFromLatLng() async {
-                              try {
-                                List<Placemark> p = await geolocator.placemarkFromCoordinates(
-                                    _currentPosition.latitude, _currentPosition.longitude);
-                          
-                                Placemark place = p[0];
-                          
-                                setState(() {
-                                  _currentAddress =
-                                      "${place.name},${place.locality}, ${place.postalCode}, ${place.country}";
-                                  //load data from database into list array 'data'
-                                });
-                              } catch (e) {
-                                print(e);
-                              }
-                            }
+    try {
+      List<Placemark> p = await geolocator.placemarkFromCoordinates(
+          _currentPosition.latitude, _currentPosition.longitude);
+
+      Placemark place = p[0];
+
+      setState(() {
+        _currentAddress =
+            "${place.name},${place.locality}, ${place.postalCode}, ${place.country}";
+        //load data from database into list array 'data'
+      });
+    } catch (e) {
+      print(e);
+    }
+  }
 
   void _changeRadius() {
-                              TextEditingController radiusController = TextEditingController();
-                          
-                              showDialog(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  // return object of type Dialog
-                                  return AlertDialog(
-                                    title: new Text("Change new Radius (km)?"),
-                                    content: new TextField(
-                                        keyboardType: TextInputType.phone,
-                                        controller: radiusController,
-                                        decoration: InputDecoration(
-                                          labelText: 'new radius',
-                                          icon: Icon(Icons.map),
-                                        )),
-                                    actions: <Widget>[
-                                      // usually buttons at the bottom of the dialog
-                                      new FlatButton(
-                                        child: new Text("Yes"),
-                                        onPressed: () {
-                                          if (radiusController.text.length < 1) {
-                                            Toast.show("Please enter new radius ", context,
-                                                duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
-                                            return;
-                                          }
-                                          http.post(urlupdate, body: {
-                                            "email": widget.user.email,
-                                            "radius": radiusController.text,
-                                          }).then((res) {
-                                            var string = res.body;
-                                            List dres = string.split(",");
-                                            if (dres[0] == "success") {
-                                              setState(() {
-                                                widget.user.radius = dres[4];
-                                                Toast.show("Success ", context,
-                                                    duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
-                                                Navigator.of(context).pop();
-                                                return;
-                                              });
-                                            } else {}
-                                          }).catchError((err) {
-                                            print(err);
-                                          });
-                                          Toast.show("Failed ", context,
-                                              duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
-                                        },
-                                      ),
-                                      new FlatButton(
-                                        child: new Text("No"),
-                                        onPressed: () {
-                                          Navigator.of(context).pop();
-                                        },
-                                      ),
-                                    ],
-                                  );
-                                },
-                              );
-                            }
+    TextEditingController radiusController = TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        // return object of type Dialog
+        return AlertDialog(
+          title: new Text("Change new Radius (km)?"),
+          content: new TextField(
+              keyboardType: TextInputType.phone,
+              controller: radiusController,
+              decoration: InputDecoration(
+                labelText: 'new radius',
+                icon: Icon(Icons.map),
+              )),
+          actions: <Widget>[
+            // usually buttons at the bottom of the dialog
+            new FlatButton(
+              child: new Text("Yes"),
+              onPressed: () {
+                if (radiusController.text.length < 1) {
+                  Toast.show("Please enter new radius ", context,
+                      duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
+                  return;
+                }
+                http.post(urlupdate, body: {
+                  "email": widget.user.email,
+                  "radius": radiusController.text,
+                }).then((res) {
+                  var string = res.body;
+                  List dres = string.split(",");
+                  if (dres[0] == "success") {
+                    setState(() {
+                      widget.user.radius = dres[4];
+                      Toast.show("Success ", context,
+                          duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
+                      Navigator.of(context).pop();
+                      return;
+                    });
+                  } else {}
+                }).catchError((err) {
+                  print(err);
+                });
+                Toast.show("Failed ", context,
+                    duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
+              },
+            ),
+            new FlatButton(
+              child: new Text("No"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   void _logout() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -702,7 +690,84 @@ class _TabScreen4State extends State<TabScreen4> {
     await prefs.setString('pass', pass);
   }
 
-  void _buycredit() {
-    print('buy credit');
+  void _loadPayment() async {
+    // flutter defined function
+    if (widget.user.name == "not register") {
+      Toast.show("Not allowed please register", context,
+          duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
+      return;
+    }
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        // return object of type Dialog
+        return AlertDialog(
+          title: new Text("Buy Credit?"),
+          content: Container(
+            height: 100,
+            child: DropdownExample(),
+          ),
+          actions: <Widget>[
+            // usually buttons at the bottom of the dialog
+            new FlatButton(
+              child: new Text("Yes"),
+              onPressed: () async {
+                Navigator.of(context).pop();
+                var now = new DateTime.now();
+                var formatter = new DateFormat('ddMMyyyyhhmmss-');
+                String formatted = formatter.format(now)+randomAlphaNumeric(10);
+                print(formatted);
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => PaymentScreen(user:widget.user,orderid:formatted, val:_value)));
+              },
+            ),
+            new FlatButton(
+              child: new Text("No"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+}
+class DropdownExample extends StatefulWidget {
+  @override
+  _DropdownExampleState createState() {
+    return _DropdownExampleState();
+  }
+}
+
+class _DropdownExampleState extends State<DropdownExample> {
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: DropdownButton<String>(
+        items: [
+          DropdownMenuItem<String>(
+            child: Text('50 HCredit (RM10)'),
+            value: '10',
+          ),
+          DropdownMenuItem<String>(
+            child: Text('100 HCredit (RM20)'),
+            value: '20',
+          ),
+          DropdownMenuItem<String>(
+            child: Text('150 HCredit (RM30)'),
+            value: '30',
+          ),
+        ],
+        onChanged: (String value) {
+          setState(() {
+            _value = value;
+          });
+        },
+        hint: Text('Select Credit'),
+        value: _value,
+      ),
+    );
   }
 }

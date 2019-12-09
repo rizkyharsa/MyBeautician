@@ -2,14 +2,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:my_beautician/job.dart';
+import 'package:my_beautician/jobdetail.dart';
 import 'dart:convert';
-//import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:flutter/services.dart';
 //import 'package:my_beautician/mainscreen.dart';
 import 'package:my_beautician/user.dart';
 import 'package:progress_dialog/progress_dialog.dart';
-import 'package:my_beautician/jobdetail.dart';
+
 import 'SlideRightRoute.dart';
 //import 'enterexit.dart';
 
@@ -41,15 +42,17 @@ class _TabScreenState extends State<TabScreen> {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(
-        SystemUiOverlayStyle(statusBarColor: Colors.purple[300]));
+    
+   SystemChrome.setSystemUIOverlayStyle(
+        SystemUiOverlayStyle(statusBarColor: Colors.purple[400]));
     return MaterialApp(
         debugShowCheckedModeBanner: false,
         home: Scaffold(
             resizeToAvoidBottomPadding: false,
+           
             body: RefreshIndicator(
               key: refreshKey,
-              color: Colors.purple[300],
+              color: Colors.purple[400],
               onRefresh: () async {
                 await refreshList();
               },
@@ -91,9 +94,8 @@ class _TabScreenState extends State<TabScreen> {
                                           children: <Widget>[
                                             Row(
                                               children: <Widget>[
-                                                Icon(
-                                                  Icons.person,
-                                                ),
+                                                Icon(Icons.person,
+                                                    ),
                                                 SizedBox(
                                                   width: 5,
                                                 ),
@@ -111,39 +113,35 @@ class _TabScreenState extends State<TabScreen> {
                                             ),
                                             Row(
                                               children: <Widget>[
-                                                Icon(
-                                                  Icons.location_on,
-                                                ),
+                                                Icon(Icons.location_on,
+                                                    ),
                                                 SizedBox(
                                                   width: 5,
                                                 ),
                                                 Flexible(
-                                                  child: Text(
-                                                       _currentAddress),
+                                                  child: Text(_currentAddress),
                                                 ),
                                               ],
                                             ),
                                             Row(
                                               children: <Widget>[
-                                                Icon(
-                                                  Icons.rounded_corner,
-                                                ),
+                                                Icon(Icons.rounded_corner,
+                                                    ),
                                                 SizedBox(
                                                   width: 5,
                                                 ),
                                                 Flexible(
                                                   child: Text(
                                                       "Job Radius within " +
-                                                      widget.user.radius +
+                                                          widget.user.radius +
                                                           " KM"),
                                                 ),
                                               ],
                                             ),
                                             Row(
                                               children: <Widget>[
-                                                Icon(
-                                                  Icons.credit_card,
-                                                ),
+                                                Icon(Icons.credit_card,
+                                                  ),
                                                 SizedBox(
                                                   width: 5,
                                                 ),
@@ -166,7 +164,7 @@ class _TabScreenState extends State<TabScreen> {
                               height: 4,
                             ),
                             Container(
-                              color: Colors.purple[300],
+                              color: Colors.purple[400],
                               child: Center(
                                 child: Text("Jobs Available Today",
                                     style: TextStyle(
@@ -208,6 +206,7 @@ class _TabScreenState extends State<TabScreen> {
                             data[index]['jobtitle'],
                             data[index]['joblatitude'],
                             data[index]['joblongitude'],
+                            data[index]['jobrating'],
                             widget.user.radius,
                             widget.user.name,
                             widget.user.credit,
@@ -218,15 +217,16 @@ class _TabScreenState extends State<TabScreen> {
                             child: Row(
                               children: <Widget>[
                                 Container(
-                                    height: 100,
-                                    width: 100,
-                                    decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        border: Border.all(color: Colors.white),
-                                        image: DecorationImage(
-                                            fit: BoxFit.fill,
-                                            image: NetworkImage(
-                                                "http://michannael.com/mybeautician/images/${data[index]['jobimage']}.jpg")))),
+                                  height: 100,
+                                  width: 100,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                      border: Border.all(color: Colors.white),
+                                      image: DecorationImage(
+                                    fit: BoxFit.fill,
+                                    image: NetworkImage(
+                                    "http://michannael.com/mybeautician/images/${data[index]['jobimage']}.jpg"
+                                  )))),
                                 Expanded(
                                   child: Container(
                                     child: Column(
@@ -238,20 +238,18 @@ class _TabScreenState extends State<TabScreen> {
                                             style: TextStyle(
                                                 fontSize: 16,
                                                 fontWeight: FontWeight.bold)),
-                                        /*RatingBar(
+                                        RatingBar(
                                           itemCount: 5,
                                           itemSize: 12,
-                                          initialRating: double.parse(
-                                              data[index]['jobrating']
-                                                  .toString()),
+                                          initialRating: double.parse(data[index]['jobrating']
+                                                .toString()),
                                           itemPadding: EdgeInsets.symmetric(
                                               horizontal: 2.0),
                                           itemBuilder: (context, _) => Icon(
                                             Icons.star,
                                             color: Colors.amber,
-                                          ),
-                                          onRatingUpdate: (double value) {},
-                                        ),*/
+                                          ), onRatingUpdate: (double value) {},
+                                        ),
                                         SizedBox(
                                           height: 5,
                                         ),
@@ -334,7 +332,7 @@ class _TabScreenState extends State<TabScreen> {
 
   Future init() async {
     this.makeRequest();
-    _getCurrentLocation();
+    //_getCurrentLocation();
   }
 
   Future<Null> refreshList() async {
@@ -342,6 +340,8 @@ class _TabScreenState extends State<TabScreen> {
     this.makeRequest();
     return null;
   }
+
+  
 
   void _onJobDetail(
       String jobid,
@@ -353,6 +353,7 @@ class _TabScreenState extends State<TabScreen> {
       String jobtitle,
       String joblatitude,
       String joblongitude,
+      String jobrating,
       String email,
       String name,
       String credit) {
@@ -366,11 +367,11 @@ class _TabScreenState extends State<TabScreen> {
         jobimage: jobimage,
         jobworker: null,
         joblat: joblatitude,
-        joblon: joblongitude);
-    print(data);
-
-    Navigator.push(
-        context, SlideRightRoute(page: JobDetail(job: job, user: widget.user)));
+        joblon: joblongitude,
+        jobrating:jobrating );
+    //print(data);
+    
+    Navigator.push(context, SlideRightRoute(page: JobDetail(job: job, user: widget.user)));
   }
 
   void _onJobDelete() {
