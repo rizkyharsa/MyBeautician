@@ -9,6 +9,8 @@ import 'package:http/http.dart' as http;
 import 'package:progress_dialog/progress_dialog.dart';
 import 'user.dart';
 
+String urlSecurityCodeForResetPass =
+    "http://michannael.com/mybeautician/php/secure_code.php";
 String urlLogin = "http://michannael.com/mybeautician/php/login_user.php";
 final TextEditingController _emcontroller = TextEditingController();
 String _email = "";
@@ -167,11 +169,15 @@ class _LoginPageState extends State<LoginPage> {
           pr.dismiss();
           print("Radius:");
           print(dres);
-         User user = new User(name:dres[1],email: dres[2],phone:dres[3],radius: dres[4],credit:dres[5],rating: dres[6]);
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => MainScreen(user: user)));
+          User user = new User(
+              name: dres[1],
+              email: dres[2],
+              phone: dres[3],
+              radius: dres[4],
+              credit: dres[5],
+              rating: dres[6]);
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => MainScreen(user: user)));
         } else {
           pr.dismiss();
         }
@@ -190,8 +196,55 @@ class _LoginPageState extends State<LoginPage> {
 
   void _onForgot() {
     print('Forgot');
-    Navigator.push(
-      context, MaterialPageRoute(builder: (context) => ForgotPassword(email:_email)));
+    _email = _emcontroller.text;
+
+    if (_isEmailValid(_email)) {
+      ProgressDialog pr = new ProgressDialog(context,
+          type: ProgressDialogType.Normal, isDismissible: false);
+      pr.style(message: "Sending Email");
+      pr.show();
+      http.post(urlSecurityCodeForResetPass, body: {
+        "email": _email,
+        "password": _password,
+      }).then((res) {
+        print("secure code : " + res.body);
+        if (res.body == "error") {
+          pr.dismiss();
+
+          Toast.show('error', context,
+              duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
+        } else {
+          pr.dismiss();
+
+          _saveEmailForPassReset(_email);
+          _saveSecureCode(res.body);
+
+          Toast.show('Security code sent to your email', context,
+              duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
+
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => ResetPassword()));
+        }
+      }).catchError((err) {
+        pr.dismiss();
+        print(err);
+      });
+    } else {
+      Toast.show('Please put the email first', context,
+          duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
+    }
+  }
+
+  void _saveEmailForPassReset(String code) async {
+    print('saving preferences');
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('resetPassEmail', code);
+  }
+
+  void _saveSecureCode(String code) async {
+    print('saving preferences');
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('secureCode', code);
   }
 
   void _onChange(bool value) {

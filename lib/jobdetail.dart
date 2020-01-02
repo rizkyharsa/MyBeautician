@@ -169,23 +169,22 @@ class _DetailInterfaceState extends State<DetailInterface> {
   }
 
   void _onAcceptJob() {
-     if (widget.user.email=="user@noregister"){
+    if (widget.user.email == "user@noregister") {
       Toast.show("Please register to view accept jobs", context,
           duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
       return;
-    }else{
+    } else {
       _showDialog();
     }
     print("Accept Job");
-    
   }
 
   void _showDialog() {
     // flutter defined function
-    if (int.parse(widget.user.credit)<1){
-        Toast.show("Credit not enough ", context,
-            duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
-            return;
+    if (int.parse(widget.user.credit) < 1) {
+      Toast.show("Credit not enough ", context,
+          duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
+      return;
     }
     showDialog(
       context: context,
@@ -216,7 +215,8 @@ class _DetailInterfaceState extends State<DetailInterface> {
   }
 
   Future<String> acceptRequest() async {
-    String urlLoadJobs = "http://michannael.com/mybeautician/php/accept_job.php";
+    String urlLoadJobs =
+        "http://michannael.com/mybeautician/php/accept_job.php";
     ProgressDialog pr = new ProgressDialog(context,
         type: ProgressDialogType.Normal, isDismissible: false);
     pr.style(message: "Accepting Job");
@@ -230,12 +230,12 @@ class _DetailInterfaceState extends State<DetailInterface> {
       if (res.body == "success") {
         Toast.show("Success", context,
             duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
-            pr.dismiss();
-            _onLogin(widget.user.email, context);
+        pr.dismiss();
+        _onLogin(widget.user.email, context);
       } else {
         Toast.show("Failed", context,
             duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
-            pr.dismiss();
+        pr.dismiss();
       }
     }).catchError((err) {
       print(err);
@@ -244,8 +244,8 @@ class _DetailInterfaceState extends State<DetailInterface> {
     return null;
   }
 
-   void _onLogin(String email, BuildContext ctx) {
-     String urlgetuser = "http://michannael.com/mybeautician/php/get_user.php";
+  void _onLogin(String email, BuildContext ctx) {
+    String urlgetuser = "http://michannael.com/mybeautician/php/get_user.php";
 
     http.post(urlgetuser, body: {
       "email": email,

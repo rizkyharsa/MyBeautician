@@ -86,8 +86,9 @@ class _TabScreen3State extends State<TabScreen3> {
                                           children: <Widget>[
                                             Row(
                                               children: <Widget>[
-                                                Icon(Icons.person,
-                                                    ),
+                                                Icon(
+                                                  Icons.person,
+                                                ),
                                                 SizedBox(
                                                   width: 5,
                                                 ),
@@ -105,8 +106,9 @@ class _TabScreen3State extends State<TabScreen3> {
                                             ),
                                             Row(
                                               children: <Widget>[
-                                                Icon(Icons.location_on,
-                                                    ),
+                                                Icon(
+                                                  Icons.location_on,
+                                                ),
                                                 SizedBox(
                                                   width: 5,
                                                 ),
@@ -117,8 +119,9 @@ class _TabScreen3State extends State<TabScreen3> {
                                             ),
                                             Row(
                                               children: <Widget>[
-                                                Icon(Icons.rounded_corner,
-                                                    ),
+                                                Icon(
+                                                  Icons.rounded_corner,
+                                                ),
                                                 SizedBox(
                                                   width: 5,
                                                 ),
@@ -132,8 +135,9 @@ class _TabScreen3State extends State<TabScreen3> {
                                             ),
                                             Row(
                                               children: <Widget>[
-                                                Icon(Icons.credit_card,
-                                                    ),
+                                                Icon(
+                                                  Icons.credit_card,
+                                                ),
                                                 SizedBox(
                                                   width: 5,
                                                 ),
@@ -192,17 +196,16 @@ class _TabScreen3State extends State<TabScreen3> {
                             padding: const EdgeInsets.all(2.0),
                             child: Row(
                               children: <Widget>[
-                                 Container(
-                                  height: 100,
-                                  width: 100,
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                      border: Border.all(color: Colors.white),
-                                      image: DecorationImage(
-                                    fit: BoxFit.fill,
-                                    image: NetworkImage(
-                                    "http://michannael.com/mybeautician/images/${data[index]['jobimage']}.jpg"
-                                  )))),
+                                Container(
+                                    height: 100,
+                                    width: 100,
+                                    decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        border: Border.all(color: Colors.white),
+                                        image: DecorationImage(
+                                            fit: BoxFit.fill,
+                                            image: NetworkImage(
+                                                "http://michannael.com/mybeautician/images/${data[index]['jobimage']}.jpg")))),
                                 Expanded(
                                   child: Container(
                                     child: Column(
@@ -225,7 +228,8 @@ class _TabScreen3State extends State<TabScreen3> {
                                           itemBuilder: (context, _) => Icon(
                                             Icons.star,
                                             color: Colors.amber,
-                                          ), onRatingUpdate: (double value) {},
+                                          ),
+                                          onRatingUpdate: (double value) {},
                                         ),
                                         SizedBox(
                                           height: 5,
@@ -281,18 +285,18 @@ class _TabScreen3State extends State<TabScreen3> {
   }
 
   Future<String> makeRequest() async {
-    String urlLoadJobs = "http://michannael.com/mybeautician/php/load_accepted_jobs.php";
+    String urlLoadJobs =
+        "http://michannael.com/mybeautician/php/load_accepted_job.php";
     ProgressDialog pr = new ProgressDialog(context,
         type: ProgressDialogType.Normal, isDismissible: false);
     pr.style(message: "Loading All Accepted Jobs");
     pr.show();
     http.post(urlLoadJobs, body: {
       "email": widget.user.email ?? "notavail",
-
     }).then((res) {
       setState(() {
         var extractdata = json.decode(res.body);
-        data = extractdata["jobs"]; 
+        data = extractdata["jobs"];
         perpage = (data.length / 10);
         print("data");
         print(data);
@@ -306,11 +310,11 @@ class _TabScreen3State extends State<TabScreen3> {
   }
 
   Future init() async {
-    if (widget.user.email=="user@noregister"){
+    if (widget.user.email == "user@noregister") {
       Toast.show("Please register to view accepted Jobs", context,
           duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
       return;
-    }else{
+    } else {
       this.makeRequest();
     }
   }
@@ -320,6 +324,4 @@ class _TabScreen3State extends State<TabScreen3> {
     this.makeRequest();
     return null;
   }
-
-  
 }

@@ -6,7 +6,6 @@ import 'package:my_beautician/tab_screen3.dart';
 import 'package:my_beautician/tab_screen4.dart';
 import 'package:my_beautician/user.dart';
 
-
 class MainScreen extends StatefulWidget {
   final User user;
 
@@ -27,7 +26,9 @@ class _MainScreenState extends State<MainScreen> {
     tabs = [
       TabScreen(user: widget.user),
       TabScreen2(user: widget.user),
-      TabScreen3(user: widget.user,),
+      TabScreen3(
+        user: widget.user,
+      ),
       TabScreen4(user: widget.user),
     ];
   }
@@ -55,19 +56,27 @@ class _MainScreenState extends State<MainScreen> {
 
         items: [
           BottomNavigationBarItem(
-            icon: Icon(Icons.search, ),
+            icon: Icon(
+              Icons.search,
+            ),
             title: Text("Jobs"),
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.list, ),
+            icon: Icon(
+              Icons.list,
+            ),
             title: Text("Request Jobs"),
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.event, ),
-            title: Text("My Jobs"),
+            icon: Icon(
+              Icons.event,
+            ),
+            title: Text("Accepted Jobs"),
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.person, ),
+            icon: Icon(
+              Icons.person,
+            ),
             title: Text("Profile"),
           )
         ],

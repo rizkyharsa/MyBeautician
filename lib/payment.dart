@@ -7,39 +7,50 @@ import 'package:http/http.dart' as http;
 import 'mainscreen.dart';
 
 class PaymentScreen extends StatefulWidget {
-
   final User user;
-  final String orderid,val;
-  PaymentScreen({this.user,this.orderid,this.val});
+  final String orderid, val;
+  PaymentScreen({this.user, this.orderid, this.val});
 
   @override
   _PaymentScreenState createState() => _PaymentScreenState();
 }
 
 class _PaymentScreenState extends State<PaymentScreen> {
-    Completer<WebViewController> _controller = Completer<WebViewController>();
+  Completer<WebViewController> _controller = Completer<WebViewController>();
 
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-      onWillPop: _onBackPressAppBar,
-      child: Scaffold(
-        appBar: AppBar(
-            title: Text('PAYMENT'),
-            backgroundColor: Colors.purple[400],
-          ),
-      body: Column(children: <Widget>[
-        Expanded(child:  WebView(
-        initialUrl: 'http://michannael.com/mybeautician/php/payment.php?email='+widget.user.email+'&mobile='+widget.user.phone+'&name='+widget.user.name+'&amount='+widget.val+'&orderid='+widget.orderid,
-        javascriptMode: JavascriptMode.unrestricted,
-        onWebViewCreated: (WebViewController webViewController) {
-          _controller.complete(webViewController);
-        },
-      ),)
-      ],)
-    ));
+        onWillPop: _onBackPressAppBar,
+        child: Scaffold(
+            appBar: AppBar(
+              title: Text('PAYMENT'),
+              backgroundColor: Colors.purple[300],
+            ),
+            body: Column(
+              children: <Widget>[
+                Expanded(
+                  child: WebView(
+                    initialUrl:
+                        'http://michannael.com/mybeautician/php/payment.php?email=' +
+                            widget.user.email +
+                            '&mobile=' +
+                            widget.user.phone +
+                            '&name=' +
+                            widget.user.name +
+                            '&amount=' +
+                            widget.val +
+                            '&orderid=' +
+                            widget.orderid,
+                    javascriptMode: JavascriptMode.unrestricted,
+                    onWebViewCreated: (WebViewController webViewController) {
+                      _controller.complete(webViewController);
+                    },
+                  ),
+                )
+              ],
+            )));
   }
-
 
   Future<bool> _onBackPressAppBar() async {
     print("onbackpress payment");
@@ -60,8 +71,10 @@ class _PaymentScreenState extends State<PaymentScreen> {
             radius: dres[4],
             credit: dres[5],
             rating: dres[6]);
-        Navigator.push(context,
-            MaterialPageRoute(builder: (context) => MainScreen(user: updateuser)));
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => MainScreen(user: updateuser)));
       }
     }).catchError((err) {
       print(err);

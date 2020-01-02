@@ -9,6 +9,7 @@ import 'package:my_beautician/registrationscreen.dart';
 import 'package:my_beautician/user.dart';
 import 'package:toast/toast.dart';
 import 'package:progress_dialog/progress_dialog.dart';
+
 double perpage = 1;
 
 class TabScreen2 extends StatefulWidget {
@@ -95,8 +96,9 @@ class _TabScreen2State extends State<TabScreen2> {
                                           children: <Widget>[
                                             Row(
                                               children: <Widget>[
-                                                Icon(Icons.person,
-                                                    ),
+                                                Icon(
+                                                  Icons.person,
+                                                ),
                                                 SizedBox(
                                                   width: 5,
                                                 ),
@@ -114,8 +116,9 @@ class _TabScreen2State extends State<TabScreen2> {
                                             ),
                                             Row(
                                               children: <Widget>[
-                                                Icon(Icons.location_on,
-                                                    ),
+                                                Icon(
+                                                  Icons.location_on,
+                                                ),
                                                 SizedBox(
                                                   width: 5,
                                                 ),
@@ -126,8 +129,9 @@ class _TabScreen2State extends State<TabScreen2> {
                                             ),
                                             Row(
                                               children: <Widget>[
-                                                Icon(Icons.rounded_corner,
-                                                    ),
+                                                Icon(
+                                                  Icons.rounded_corner,
+                                                ),
                                                 SizedBox(
                                                   width: 5,
                                                 ),
@@ -141,8 +145,9 @@ class _TabScreen2State extends State<TabScreen2> {
                                             ),
                                             Row(
                                               children: <Widget>[
-                                                Icon(Icons.credit_card,
-                                                    ),
+                                                Icon(
+                                                  Icons.credit_card,
+                                                ),
                                                 SizedBox(
                                                   width: 5,
                                                 ),
@@ -204,17 +209,16 @@ class _TabScreen2State extends State<TabScreen2> {
                             padding: const EdgeInsets.all(2.0),
                             child: Row(
                               children: <Widget>[
-                                 Container(
-                                  height: 100,
-                                  width: 100,
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                      border: Border.all(color: Colors.white),
-                                      image: DecorationImage(
-                                    fit: BoxFit.fill,
-                                    image: NetworkImage(
-                                    "http://michannael.com/mybeautician/images/${data[index]['jobimage']}.jpg"
-                                  )))),
+                                Container(
+                                    height: 100,
+                                    width: 100,
+                                    decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        border: Border.all(color: Colors.white),
+                                        image: DecorationImage(
+                                            fit: BoxFit.fill,
+                                            image: NetworkImage(
+                                                "http://michannael.com/mybeautician/images/${data[index]['jobimage']}.jpg")))),
                                 Expanded(
                                   child: Container(
                                     child: Column(
@@ -237,7 +241,8 @@ class _TabScreen2State extends State<TabScreen2> {
                                           itemBuilder: (context, _) => Icon(
                                             Icons.star,
                                             color: Colors.amber,
-                                          ), onRatingUpdate: (double value) {},
+                                          ),
+                                          onRatingUpdate: (double value) {},
                                         ),
                                         SizedBox(
                                           height: 5,
@@ -293,14 +298,14 @@ class _TabScreen2State extends State<TabScreen2> {
   }
 
   Future<String> makeRequest() async {
-    String urlLoadJobs = "http://michannael.com/mybeautician/php/load_job_user.php";
-     ProgressDialog pr = new ProgressDialog(context,
+    String urlLoadJobs =
+        "http://michannael.com/mybeautician/php/load_job_user.php";
+    ProgressDialog pr = new ProgressDialog(context,
         type: ProgressDialogType.Normal, isDismissible: false);
-        pr.style(message: "Loading All Posted Jobs");
+    pr.style(message: "Loading All Posted Jobs");
     pr.show();
     http.post(urlLoadJobs, body: {
       "email": widget.user.email ?? "notavail",
-
     }).then((res) {
       setState(() {
         var extractdata = json.decode(res.body);
@@ -318,11 +323,11 @@ class _TabScreen2State extends State<TabScreen2> {
   }
 
   Future init() async {
-    if (widget.user.email=="user@noregister"){
+    if (widget.user.email == "user@noregister") {
       Toast.show("Please register to view posted jobs", context,
           duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
       return;
-    }else{
+    } else {
       this.makeRequest();
     }
   }
@@ -388,7 +393,8 @@ class _TabScreen2State extends State<TabScreen2> {
   }
 
   Future<String> deleteRequest(String jobid) async {
-    String urlLoadJobs = "http://michannael.com/mybeautician/php/delete_job.php";
+    String urlLoadJobs =
+        "http://michannael.com/mybeautician/php/delete_job.php";
     ProgressDialog pr = new ProgressDialog(context,
         type: ProgressDialogType.Normal, isDismissible: false);
     pr.style(message: "Deleting Jobs");
@@ -412,6 +418,7 @@ class _TabScreen2State extends State<TabScreen2> {
     return null;
   }
 }
+
 class SlideMenu extends StatefulWidget {
   final Widget child;
   final List<Widget> menuItems;
@@ -422,13 +429,15 @@ class SlideMenu extends StatefulWidget {
   _SlideMenuState createState() => new _SlideMenuState();
 }
 
-class _SlideMenuState extends State<SlideMenu> with SingleTickerProviderStateMixin {
+class _SlideMenuState extends State<SlideMenu>
+    with SingleTickerProviderStateMixin {
   AnimationController _controller;
 
   @override
   initState() {
     super.initState();
-    _controller = new AnimationController(vsync: this, duration: const Duration(milliseconds: 200));
+    _controller = new AnimationController(
+        vsync: this, duration: const Duration(milliseconds: 200));
   }
 
   @override
@@ -440,9 +449,8 @@ class _SlideMenuState extends State<SlideMenu> with SingleTickerProviderStateMix
   @override
   Widget build(BuildContext context) {
     final animation = new Tween(
-      begin: const Offset(0.0, 0.0),
-      end: const Offset(-0.2, 0.0)
-    ).animate(new CurveTween(curve: Curves.decelerate).animate(_controller));
+            begin: const Offset(0.0, 0.0), end: const Offset(-0.2, 0.0))
+        .animate(new CurveTween(curve: Curves.decelerate).animate(_controller));
 
     return new GestureDetector(
       onHorizontalDragUpdate: (data) {
@@ -453,8 +461,11 @@ class _SlideMenuState extends State<SlideMenu> with SingleTickerProviderStateMix
       },
       onHorizontalDragEnd: (data) {
         if (data.primaryVelocity > 2500)
-          _controller.animateTo(.0); //close menu on fast swipe in the right direction
-        else if (_controller.value >= .5 || data.primaryVelocity < -2500) // fully open if dragged a lot to left or on fast swipe to left
+          _controller
+              .animateTo(.0); //close menu on fast swipe in the right direction
+        else if (_controller.value >= .5 ||
+            data.primaryVelocity <
+                -2500) // fully open if dragged a lot to left or on fast swipe to left
           _controller.animateTo(1.0);
         else // close if none of above
           _controller.animateTo(.0);

@@ -128,8 +128,7 @@ class _CreateNewJobState extends State<CreateNewJob> {
             child: Container(
               alignment: Alignment.topLeft,
               child: Text("Job Location",
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold)),
+                  style: TextStyle(fontWeight: FontWeight.bold)),
             )),
         SizedBox(
           height: 5,
@@ -140,7 +139,9 @@ class _CreateNewJobState extends State<CreateNewJob> {
             SizedBox(
               width: 10,
             ),
-            Flexible(child: Text(_currentAddress),) 
+            Flexible(
+              child: Text(_currentAddress),
+            )
           ],
         ),
         SizedBox(
@@ -189,11 +190,9 @@ class _CreateNewJobState extends State<CreateNewJob> {
     pr.style(message: "Requesting...");
     pr.show();
     String base64Image = base64Encode(_image.readAsBytesSync());
-    print(
-        _currentPosition.latitude.toString() +
+    print(_currentPosition.latitude.toString() +
         "/" +
-        _currentPosition.longitude.toString()
-        );
+        _currentPosition.longitude.toString());
 
     http.post(urlUpload, body: {
       "encoded_string": base64Image,
@@ -269,12 +268,12 @@ class _CreateNewJobState extends State<CreateNewJob> {
       print(dres);
       if (dres[0] == "success") {
         User user = new User(
-          name: dres[1],
-          email: dres[2],
-          phone: dres[3],
-          radius: dres[4],
-          credit: dres[5],
-          rating: dres[6]);
+            name: dres[1],
+            email: dres[2],
+            phone: dres[3],
+            radius: dres[4],
+            credit: dres[5],
+            rating: dres[6]);
         Navigator.push(ctx,
             MaterialPageRoute(builder: (context) => MainScreen(user: user)));
       }
@@ -283,9 +282,10 @@ class _CreateNewJobState extends State<CreateNewJob> {
     });
   }
 
-  void _loadmap() async  {
-    LocationResult result = await Navigator.of(context).push(
-        MaterialPageRoute(builder: (context) => PlacePicker("AIzaSyAyv2_fF3W444SmJW3SQaj3Dzt8Joj-plg")));
+  void _loadmap() async {
+    LocationResult result = await Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) =>
+            PlacePicker("AIzaSyAyv2_fF3W444SmJW3SQaj3Dzt8Joj-plg")));
 
     // Handle the result in your way
     print("MAP SHOW:");

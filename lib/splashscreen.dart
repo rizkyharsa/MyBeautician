@@ -80,9 +80,7 @@ class _ProgressIndicatorState extends State<ProgressIndicator>
   Widget build(BuildContext context) {
     return new Center(
         child: new Container(
-      child: CircularProgressIndicator(
-        
-      ),
+      child: CircularProgressIndicator(),
     ));
   }
 }
@@ -90,12 +88,12 @@ class _ProgressIndicatorState extends State<ProgressIndicator>
 void loadpref(BuildContext ctx) async {
   print('Inside loadpref()');
   SharedPreferences prefs = await SharedPreferences.getInstance();
-  _email = (prefs.getString('email')??'');
-  _password = (prefs.getString('pass')??'');
+  _email = (prefs.getString('email') ?? '');
+  _password = (prefs.getString('pass') ?? '');
   print("Splash:Preference");
   print(_email);
   print(_password);
-  if (_isEmailValid(_email??"no email")) {
+  if (_isEmailValid(_email ?? "no email")) {
     //try to login if got email;
     _onLogin(_email, _password, ctx);
   } else {
@@ -105,8 +103,7 @@ void loadpref(BuildContext ctx) async {
         email: "user@noregister",
         phone: "not register",
         radius: "15",
-        credit: "0"
-        );
+        credit: "0");
     Navigator.push(
         ctx, MaterialPageRoute(builder: (context) => MainScreen(user: user)));
   }
@@ -143,7 +140,7 @@ void _onLogin(String email, String pass, BuildContext ctx) {
           phone: "not register",
           radius: "15",
           credit: "0");
-          
+
       Navigator.push(
           ctx, MaterialPageRoute(builder: (context) => MainScreen(user: user)));
     }

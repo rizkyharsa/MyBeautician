@@ -17,8 +17,8 @@ final TextEditingController _namecontroller = TextEditingController();
 final TextEditingController _emcontroller = TextEditingController();
 final TextEditingController _passcontroller = TextEditingController();
 final TextEditingController _phcontroller = TextEditingController();
-//final TextEditingController _radiuscontroller = TextEditingController();
-String _name, _email, _password, _phone;
+final TextEditingController _radiuscontroller = TextEditingController();
+String _name, _email, _password, _phone, _radius;
 
 class RegisterScreen extends StatefulWidget {
   @override
@@ -39,12 +39,12 @@ class _RegisterUserState extends State<RegisterScreen> {
       child: Scaffold(
         resizeToAvoidBottomPadding: false,
         appBar: AppBar(
-          title: Text('New User Registration'),
-          elevation: 20,
+          title: Text('Register New Account'),
+          elevation: 10,
         ),
         body: SingleChildScrollView(
           child: Container(
-            padding: EdgeInsets.fromLTRB(40, 20, 40, 200),
+            padding: EdgeInsets.fromLTRB(40, 15, 40, 50),
             child: RegisterWidget(),
             decoration: BoxDecoration(
               image: DecorationImage(
@@ -80,10 +80,10 @@ class RegisterWidgetState extends State<RegisterWidget> {
     return Column(
       children: <Widget>[
         GestureDetector(
-            onTap: _choose,
+            onTap: () => mainBottomSheet(context),
             child: Container(
-              width: 150,
-              height: 150,
+              width: 130,
+              height: 130,
               decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   image: DecorationImage(
@@ -109,7 +109,7 @@ class RegisterWidgetState extends State<RegisterWidget> {
                 prefixIcon: Icon(Icons.email),
                 border: new OutlineInputBorder(
                   borderRadius: const BorderRadius.all(
-                    const Radius.circular(30.0),
+                    const Radius.circular(25.0),
                   ),
                 ),
                 hintStyle: new TextStyle(color: Colors.black54),
@@ -128,7 +128,7 @@ class RegisterWidgetState extends State<RegisterWidget> {
                 prefixIcon: Icon(Icons.person),
                 border: new OutlineInputBorder(
                   borderRadius: const BorderRadius.all(
-                    const Radius.circular(30.0),
+                    const Radius.circular(25.0),
                   ),
                 ),
                 hintStyle: new TextStyle(color: Colors.black54),
@@ -146,7 +146,7 @@ class RegisterWidgetState extends State<RegisterWidget> {
               prefixIcon: Icon(Icons.lock),
               border: new OutlineInputBorder(
                 borderRadius: const BorderRadius.all(
-                  const Radius.circular(30.0),
+                  const Radius.circular(25.0),
                 ),
               ),
               hintStyle: new TextStyle(color: Colors.black54),
@@ -167,24 +167,38 @@ class RegisterWidgetState extends State<RegisterWidget> {
                 prefixIcon: Icon(Icons.phone),
                 border: new OutlineInputBorder(
                   borderRadius: const BorderRadius.all(
-                    const Radius.circular(30.0),
+                    const Radius.circular(25.0),
                   ),
                 ),
                 hintStyle: new TextStyle(color: Colors.black54),
                 hintText: "Phone",
               )),
         ),
-        /*TextField(
-            controller: _radiuscontroller,
-            keyboardType: TextInputType.number,
-            decoration: InputDecoration(
-                labelText: 'Radius', icon: Icon(Icons.blur_circular))),*/
+        SizedBox(
+          height: 5,
+        ),
+        Padding(
+          padding: EdgeInsets.all(0.0),
+          child: TextField(
+              controller: _radiuscontroller,
+              keyboardType: TextInputType.number,
+              decoration: InputDecoration(
+                prefixIcon: Icon(Icons.blur_circular),
+                border: new OutlineInputBorder(
+                  borderRadius: const BorderRadius.all(
+                    const Radius.circular(25.0),
+                  ),
+                ),
+                hintStyle: new TextStyle(color: Colors.black54),
+                hintText: "Radius",
+              )),
+        ),
         SizedBox(
           height: 15,
         ),
         MaterialButton(
           shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(25.0)),
           minWidth: 350,
           height: 55,
           child: Text('Register'),
@@ -196,38 +210,67 @@ class RegisterWidgetState extends State<RegisterWidget> {
         SizedBox(
           height: 15,
         ),
+        Text("Already have an account?"),
+        SizedBox(
+          height: 10,
+        ),
         GestureDetector(
             onTap: _onBackPress,
-            child: Text('Already Register', style: TextStyle(fontSize: 14))),
+            child: Text('Login', style: TextStyle(fontSize: 14))),
       ],
     );
   }
 
-  void _choose() async {
-    final imageSource = await showDialog<ImageSource>(
+  void mainBottomSheet(BuildContext context) {
+    showModalBottomSheet(
         context: context,
-        builder: (context) => AlertDialog(
-              title: Text("Select the image source"),
-              actions: <Widget>[
-                MaterialButton(
-                  child: Text("Camera"),
-                  onPressed: () => Navigator.pop(context, ImageSource.camera),
-                ),
-                MaterialButton(
-                  child: Text("Gallery"),
-                  onPressed: () => Navigator.pop(context, ImageSource.gallery),
-                )
-              ],
-            ));
-    if (imageSource != null) {
-      final file = await ImagePicker.pickImage(source: imageSource);
-      if (file != null) {
-        setState(() => _image = file);
-      }
+        builder: (BuildContext context) {
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              _createTile(context, 'Camera', Icons.camera, _action1),
+              _createTile(context, 'Gallery', Icons.photo_album, _action2),
+            ],
+          );
+        });
+  }
+
+  ListTile _createTile(
+      BuildContext context, String name, IconData icon, Function action) {
+    return ListTile(
+      leading: Icon(icon),
+      title: Text(name),
+      onTap: () {
+        Navigator.pop(context);
+        action();
+      },
+    );
+  }
+
+  //Take profile picture from camera
+  _action1() async {
+    print('action camera');
+    File _cameraImage;
+
+    _cameraImage = await ImagePicker.pickImage(source: ImageSource.camera);
+    if (_cameraImage != null) {
+      //Avoid crash if user cancel picking image
+      _image = _cameraImage;
+      setState(() {});
     }
-    //_image = await ImagePicker.pickImage(source: ImageSource.camera);
-    //setState(() {});
-    //_image = await ImagePicker.pickImage(source: ImageSource.gallery);
+  }
+
+  //Take profile picture from gallery
+  _action2() async {
+    print('action gallery');
+    File _galleryImage;
+
+    _galleryImage = await ImagePicker.pickImage(source: ImageSource.gallery);
+    if (_galleryImage != null) {
+      //Avoid crash if user cancel picking image
+      _image = _galleryImage;
+      setState(() {});
+    }
   }
 
   void _onRegister() {
@@ -248,13 +291,13 @@ class RegisterWidgetState extends State<RegisterWidget> {
     _email = _emcontroller.text;
     _password = _passcontroller.text;
     _phone = _phcontroller.text;
-    //_radius = _radiuscontroller.text;
+    _radius = _radiuscontroller.text;
 
     if ((_isEmailValid(_email)) &&
         (_password.length > 5) &&
         (_image != null) &&
-        (_phone.length > 5) //&&
-        /*(int.parse(_radius) < 30)*/){
+        (_phone.length > 5) &&
+        (int.parse(_radius) < 30)) {
       ProgressDialog pr = new ProgressDialog(context,
           type: ProgressDialogType.Normal, isDismissible: false);
       pr.style(message: "Registration in progress");
@@ -266,22 +309,24 @@ class RegisterWidgetState extends State<RegisterWidget> {
         "name": _name,
         "email": _email,
         "password": _password,
-        "phone": _phone, 
-        //"radius": _radius,
+        "phone": _phone,
+        "radius": _radius,
       }).then((res) {
         print(res.statusCode);
         if (res.body == "success") {
-        Toast.show(res.body, context,
-            duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
-        _image = null;
-        _namecontroller.text = '';
-        _emcontroller.text = '';
-        _passcontroller.text = '';
-        _phcontroller.text = '';
-        
-        pr.dismiss();
-        Navigator.pushReplacement(context,
-            MaterialPageRoute(builder: (BuildContext context) => LoginPage()));
+          Toast.show(res.body, context,
+              duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
+          _image = null;
+          _namecontroller.text = '';
+          _emcontroller.text = '';
+          _passcontroller.text = '';
+          _phcontroller.text = '';
+
+          pr.dismiss();
+          Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                  builder: (BuildContext context) => LoginPage()));
         }
       }).catchError((err) {
         print(err);

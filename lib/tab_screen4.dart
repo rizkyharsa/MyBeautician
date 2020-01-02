@@ -16,7 +16,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:random_string/random_string.dart';
 
-
 String urlgetuser = "http://michannael.com/mybeautician/php/get_user.php";
 String urluploadImage =
     "http://michannael.com/mybeautician/php/upload_imageprofile.php";
@@ -66,15 +65,15 @@ class _TabScreen4State extends State<TabScreen4> {
                       children: <Widget>[
                         Stack(children: <Widget>[
                           Image.asset(
-                            "assets/images/background2.png",
-                            fit: BoxFit.fitWidth,
+                            "assets/images/beauty.jpg",
+                            scale: 1,
                           ),
                           Column(
                             children: <Widget>[
                               Center(
                                 child: Text("My Beautician",
                                     style: TextStyle(
-                                        fontSize: 24,
+                                        fontSize: 22,
                                         fontWeight: FontWeight.bold,
                                         color: Colors.white)),
                               ),
@@ -84,8 +83,8 @@ class _TabScreen4State extends State<TabScreen4> {
                               GestureDetector(
                                 onTap: _takePicture,
                                 child: Container(
-                                    width: 120.0,
-                                    height: 120.0,
+                                    width: 100.0,
+                                    height: 100.0,
                                     decoration: new BoxDecoration(
                                         shape: BoxShape.circle,
                                         border: Border.all(color: Colors.white),
@@ -94,14 +93,14 @@ class _TabScreen4State extends State<TabScreen4> {
                                             image: new NetworkImage(
                                                 "http://michannael.com/mybeautician/profile/${widget.user.email}.jpg?dummy=${(number)}'")))),
                               ),
-                              SizedBox(height: 5),
                               Container(
                                 child: Text(
                                   widget.user.name?.toUpperCase() ??
                                       'Not register',
                                   style: TextStyle(
                                       fontWeight: FontWeight.bold,
-                                      fontSize: 16),
+                                      fontSize: 16,
+                                      color: Colors.white),
                                 ),
                               ),
                               Container(
@@ -109,7 +108,8 @@ class _TabScreen4State extends State<TabScreen4> {
                                   widget.user.email,
                                   style: TextStyle(
                                       fontWeight: FontWeight.bold,
-                                      fontSize: 14),
+                                      fontSize: 14,
+                                      color: Colors.white),
                                 ),
                               ),
                               Column(
@@ -119,23 +119,14 @@ class _TabScreen4State extends State<TabScreen4> {
                                     children: <Widget>[
                                       Icon(
                                         Icons.phone_android,
+                                        color: Colors.white,
                                       ),
-                                      Text(widget.user.phone ??
-                                          'not registered'),
+                                      Text(
+                                        widget.user.phone ?? 'not registered',
+                                        style: TextStyle(color: Colors.white),
+                                      ),
                                     ],
                                   ),
-                                ],
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: <Widget>[
-                                  Icon(
-                                    Icons.rate_review,
-                                  ),
-                                  SizedBox(
-                                    width: 5,
-                                  ),
-                                  
                                 ],
                               ),
                               Column(
@@ -145,9 +136,15 @@ class _TabScreen4State extends State<TabScreen4> {
                                     children: <Widget>[
                                       Icon(
                                         Icons.rounded_corner,
+                                        color: Colors.white,
                                       ),
-                                      Text("Job Radius " + "KM" ??
-                                          'Job Radius 0 KM'),
+                                      Text(
+                                        "Job Radius " +
+                                                widget.user.radius +
+                                                " KM" ??
+                                            'Job Radius 0 KM',
+                                        style: TextStyle(color: Colors.white),
+                                      ),
                                     ],
                                   ),
                                 ],
@@ -159,15 +156,19 @@ class _TabScreen4State extends State<TabScreen4> {
                                     children: <Widget>[
                                       Icon(
                                         Icons.credit_card,
+                                        color: Colors.white,
                                       ),
                                       SizedBox(
                                         width: 5,
                                       ),
                                       Flexible(
-                                        child: Text("You have " +
-                                                widget.user.credit +
-                                                " Credit" ??
-                                            "You have 0 Credit"),
+                                        child: Text(
+                                          "You have " +
+                                                  widget.user.credit +
+                                                  " Credit" ??
+                                              "You have 0 Credit",
+                                          style: TextStyle(color: Colors.white),
+                                        ),
                                       ),
                                     ],
                                   ),
@@ -179,12 +180,16 @@ class _TabScreen4State extends State<TabScreen4> {
                                   children: <Widget>[
                                     Icon(
                                       Icons.location_on,
+                                      color: Colors.white,
                                     ),
                                     SizedBox(
                                       width: 5,
                                     ),
                                     Flexible(
-                                      child: Text(_currentAddress),
+                                      child: Text(
+                                        _currentAddress,
+                                        style: TextStyle(color: Colors.white),
+                                      ),
                                     ),
                                   ],
                                 ),
@@ -716,10 +721,16 @@ class _TabScreen4State extends State<TabScreen4> {
                 Navigator.of(context).pop();
                 var now = new DateTime.now();
                 var formatter = new DateFormat('ddMMyyyyhhmmss-');
-                String formatted = formatter.format(now)+randomAlphaNumeric(10);
+                String formatted =
+                    formatter.format(now) + randomAlphaNumeric(10);
                 print(formatted);
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => PaymentScreen(user:widget.user,orderid:formatted, val:_value)));
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => PaymentScreen(
+                            user: widget.user,
+                            orderid: formatted,
+                            val: _value)));
               },
             ),
             new FlatButton(
@@ -734,6 +745,7 @@ class _TabScreen4State extends State<TabScreen4> {
     );
   }
 }
+
 class DropdownExample extends StatefulWidget {
   @override
   _DropdownExampleState createState() {
