@@ -44,7 +44,7 @@ class _RegisterUserState extends State<RegisterScreen> {
         ),
         body: SingleChildScrollView(
           child: Container(
-            padding: EdgeInsets.fromLTRB(40, 15, 40, 50),
+            padding: EdgeInsets.fromLTRB(40, 15, 40, 150),
             child: RegisterWidget(),
             decoration: BoxDecoration(
               image: DecorationImage(
