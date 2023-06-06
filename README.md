@@ -2,10 +2,6 @@
 
 A project about requested a beautician to do a beauty services.
 
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
 ## Screenshots
 <table>
   <tr>
